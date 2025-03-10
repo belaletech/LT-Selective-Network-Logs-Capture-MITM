@@ -1,14 +1,14 @@
-# Capturing Network Logs for LambdaTest Real Device Native App Automation
+# Capturing Network Logs for LambdaTest Real Device Native App Automation (Manual & Automation)
 
 ## **Use Case**
-We need to capture **3-5 minutes** of network logs during an **8-minute test execution** for **LambdaTest real device native app automation**.
+We need to capture **3-5 minutes** of network logs during an **8-minute test execution** for **LambdaTest real device native app automation and manual testing**.
 
 ## **Requirements**
 1. **Capture network logs** using **LT Tunnel and MITM Proxy** setup.
 2. **Start recording** network logs when a specific API request is detected:
-   - **Start API Request:** `https:xyz`
+   - **Start API Request:** `https://prodapi.metweb.ie/observations/dublin/today`
 3. **Stop recording** network logs when a specific API request is detected:
-   - **Stop API Request:** `https:abc`
+   - **Stop API Request:** `https://maps.google.com/maps-api-v3/api/js/59/8/map.js`
 
 ## **Proposed Approach**
 - **Set up MITM Proxy locally** to intercept and log network traffic.
@@ -16,6 +16,7 @@ We need to capture **3-5 minutes** of network logs during an **8-minute test exe
 - **Apply filtering logic:**
   - Start capturing logs when the request URL matches the **Start API**.
   - Stop capturing logs when the request URL matches the **Stop API**.
+- Works for both **manual testing** and **automated test executions**.
 
 ## **Setup Instructions**
 
@@ -52,8 +53,8 @@ import json
 import os
 
 # Target API requests
-START_API = "https:xyz"
-STOP_API = "https:abc"
+START_API = "https://prodapi.metweb.ie/observations/dublin/today"
+STOP_API = "https://maps.google.com/maps-api-v3/api/js/59/8/map.js"
 
 # Directory and file path for saving logs
 LOG_DIR = r"D:/network_logs"
@@ -106,7 +107,7 @@ Run the following command to start MITM Proxy and log network requests:
 mitmdump -s filter_logs.py --listen-port 8181
 ```
 
-### **Step 5: Start LambdaTest Tunnel**
+### **Step 5: Start LambdaTest Tunnel (For Automation Testing)**
 Use the following command to start the LambdaTest tunnel with proxy settings:
 ```sh
 LT --user <your-email> --key <your-access-key> \
@@ -115,9 +116,9 @@ LT --user <your-email> --key <your-access-key> \
 ```
 Replace `<your-email>` and `<your-access-key>` with your LambdaTest credentials.
 
-### **Step 6: Start Your Test with Tunnel**
-Once the tunnel is running, start your test execution. The logs will be captured and stored in `D:/network_logs/network_log.json`.
+### **Step 6: Start Your Test or Manual Session**
+- **For Automation:** Once the tunnel is running, start your test execution. The logs will be captured and stored in `D:/network_logs/network_log.json`.
+- **For Manual Testing:** You can open a browser or mobile app while the proxy is running, and the logs will be captured automatically based on the configured APIs.
 
 ## **Conclusion**
-This setup allows selective network logging during automation tests, ensuring only relevant traffic is captured. You can modify the script to fit your use case.
-
+This setup allows selective network logging during both **manual** and **automated** testing sessions, ensuring only relevant traffic is captured. You can modify the script to fit your use case.
